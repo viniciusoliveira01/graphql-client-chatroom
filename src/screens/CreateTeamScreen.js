@@ -1,24 +1,31 @@
 import React, { Component } from 'react'
-import { gql, graphql } from 'react-apollo'
+import { graphql } from 'react-apollo'
+import gql from 'graphql-tag'
 
 class CreateTeamScreen extends Component {
   constructor (props) {
     super(props)
     this.state = {
-      team: '',
-      teamError: ''
+      name: '',
+      nameError: ''
     }
   }
 
   onSubmit = async () => {
-    const { team } = this.state
-    const response = await this.props.mutate({
-      variables: { team }
-    });
+    const { name } = this.state
+    let response = null
 
-    const { ok, errors } = response.data.createTeam
-    if (ok) {
+    try {
+      response = await this.props.mutate({
+        variables: { name }
+      })
+    } catch (error) {
       this.props.history.push('/')
+    }
+
+    const { ok, errors, team } = response.data.createTeam
+    if (ok) {
+      this.props.history.push(`/viewTeam/${team.id}`)
     } else {
       const err = {}
       errors.forEach(({ path, message }) => {
@@ -28,17 +35,20 @@ class CreateTeamScreen extends Component {
       this.setState(err)
     }
   }
+
   render () {
-    const { team, teamError } = this.state
+    const { name, nameError } = this.state
     return (
       <div>
           <h1>Create your Team</h1>
           <input
             name='team'
             placeholder='Team name'
-            value={team}
-            onChange={e => this.setState({team: e.target.value})} />
-          {teamError && <span>{teamError}</span>}
+            value={name}
+            onChange={e => this.setState({name: e.target.value})} />
+              {
+                nameError && <span>{nameError}</span>
+              }
           <button onClick={this.onSubmit}>Submit</button>
 
       </div>
@@ -47,9 +57,12 @@ class CreateTeamScreen extends Component {
 }
 
 const createTeamMutation = gql`
-  mutation($team: String!) {
-    createTeam(name: $team) {
+  mutation($name: String!) {
+    createTeam(name: $name) {
       ok
+      team {
+        id
+      }
       errors {
         path
         message
