@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import { withFormik } from 'formik'
 import gql from 'graphql-tag'
 import { compose, graphql } from 'react-apollo'

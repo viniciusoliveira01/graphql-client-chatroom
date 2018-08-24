@@ -2,6 +2,57 @@ import React from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 
+const Bubble = ({ on = true }) => (on ? <Green>
+                                          ●
+                                        </Green> : '○')
+
+const channel = ({ id, name }, teamId) => (
+  <Link key={`channel-${id}`} to={`/viewTeam/${teamId}/${id}`}>
+  <SideBarListItem>
+    #
+    {name}
+  </SideBarListItem>
+  </Link>
+)
+
+const user = ({ id, name }) => (
+  <SideBarListItem key={`user-${id}`}>
+    <Bubble />
+    {name}
+  </SideBarListItem>
+)
+
+export default ({teamName, username, channels, users, onChannelAddClick, teamId, onInvitePeopleClick, isOwner}) => (
+  <ChannelWrapper>
+    <PushLeft>
+      <TeamNameHeader>
+        {teamName}
+      </TeamNameHeader>
+      {username}
+    </PushLeft>
+    <div>
+      <SideBarList>
+        <SideBarListHeader>
+          Channels
+          {isOwner && <span onClick={onChannelAddClick}>+++</span>}
+        </SideBarListHeader>
+        {channels.map((c) => channel(c, teamId))}
+      </SideBarList>
+    </div>
+    <div>
+      <SideBarList>
+        <SideBarListHeader>
+          Direct Messages
+        </SideBarListHeader>
+        {users.map(user)}
+      </SideBarList>
+    </div>
+    {isOwner && <div>
+                  <span onClick={onInvitePeopleClick}>+ Invite People</span>
+                </div>}
+  </ChannelWrapper>
+)
+
 const ChannelWrapper = styled.div`
   grid-column: 2
   grid-row: 1 / 4
@@ -35,48 +86,3 @@ const SideBarListHeader = styled.li`${paddingLeft};`
 const PushLeft = styled.div`${paddingLeft};`
 
 const Green = styled.span`color: #38978d;`
-
-const Bubble = ({ on = true }) => (on ? <Green>
-                                          ●
-                                        </Green> : '○')
-
-const channel = ({ id, name }, teamId) => <Link key={`channel-${id}`} to={`/viewTeam/${teamId}/${id}`}>
-                                          <SideBarListItem>
-                                            #
-                                            {name}
-                                          </SideBarListItem>
-                                          </Link>
-
-const user = ({ id, name }) => (
-  <SideBarListItem key={`user-${id}`}>
-    <Bubble />
-    {name}
-  </SideBarListItem>
-)
-
-export default ({teamName, username, channels, users, onChannelAddClick, teamId}) => (
-  <ChannelWrapper>
-    <PushLeft>
-      <TeamNameHeader>
-        {teamName}
-      </TeamNameHeader>
-      {username}
-    </PushLeft>
-    <div>
-      <SideBarList>
-        <SideBarListHeader onClick={onChannelAddClick}>
-          Channels +
-        </SideBarListHeader>
-        {channels.map((c) => channel(c, teamId))}
-      </SideBarList>
-    </div>
-    <div>
-      <SideBarList>
-        <SideBarListHeader>
-          Direct Messages
-        </SideBarListHeader>
-        {users.map(user)}
-      </SideBarList>
-    </div>
-  </ChannelWrapper>
-)

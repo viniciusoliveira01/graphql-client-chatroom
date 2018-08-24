@@ -2,7 +2,6 @@ import React from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 
-
 const TeamWrapper = styled.div`
   grid-column: 1
   grid-row: 1 / 4
@@ -34,8 +33,13 @@ const TeamListItem = styled.li`
     border-color: #767676
   }
 `
-const team = ({ id, letter }) => <Link key={`team-${id}`} to={`/viewTeam/${id}`}><TeamListItem>{letter}</TeamListItem></Link>
-
+const team = ({ id, letter }) => (
+  <Link key={`team-${id}`} to={`/viewTeam/${id}`}>
+    <TeamListItem>
+      {letter}
+    </TeamListItem>
+  </Link>
+)
 export default ({ teams }) => (
   <TeamWrapper>
     <TeamList>

@@ -1,41 +1,48 @@
 import React from 'react'
 import { graphql } from 'react-apollo'
 import findIndex from 'lodash/findIndex'
+import { Redirect } from 'react-router-dom'
 
 import { allTeamsQuery } from '../graphql/Team'
 
 import Header from '../components/viewTeam/Header'
-import Messages from '../components/viewTeam/Messages'
 import SendMessage from '../components/viewTeam/SendMessage'
 import AppLayout from '../components/viewTeam/AppLayout'
 import Sidebar from '../containers/Sidebar'
+import MessageContainer from '../containers/MessageContainer'
 
-const ViewTeamScreen = ({ data : { loading, allTeams }, match: { params: { teamId, channelId } } }) => {
+const ViewTeamScreen = ({ data: { loading, allTeams, inviteTeams }, match: { params: { teamId, channelId } } }) => {
   if (loading) {
     return null
   }
 
-  const teamIdx = !!teamId ? findIndex(allTeams, ['id', parseInt(teamId, 10)]) : 0
-  const team = allTeams[teamIdx]
-  const teams = allTeams.map(t => ({
+  const teamsList = [...allTeams, ...inviteTeams]
+
+  if (!allTeams) {
+    return <Redirect to='/createTeam' />
+  }
+
+  const teamIdInteger = parseInt(teamId, 10)
+
+  const teamIdx = teamIdInteger ? findIndex(teamsList, ['id', teamIdInteger]) : 0
+  const team = teamIdx === -1 ? teamsList[0] : teamsList[teamIdx]
+  const teams = teamsList.map(t => ({
     id: t.id,
     letter: t.name.charAt(0).toUpperCase()
   }))
 
-  const channelIdx = !!channelId ? findIndex(team.channels, ['id', parseInt(channelId, 10)]) : 0
-  const channel = team.channels[channelIdx]
+  const channelIdInteger = parseInt(channelId, 10)
+  const channelIdx = channelIdInteger ? findIndex(team.channels, ['id', channelIdInteger]) : 0
+  const channel = channelIdx === -1 ? team.channels[0] : team.channels[channelIdx]
 
   return (
     <AppLayout>
       <Sidebar teams={teams} team={team} />
-      <Header channelName={channel.name} />
-      <Messages>
-        <ul className='message-list'>
-          <li />
-          <li />
-        </ul>
-      </Messages>
-      <SendMessage channelName={channel.name} />
+      {channel && <React.Fragment>
+                    <Header channelName={channel.name} />
+                    <MessageContainer channelId={channel.id} />
+                    <SendMessage channelName={channel.name} channelId={channel.id} />
+                  </React.Fragment>}
     </AppLayout>
   )
 }

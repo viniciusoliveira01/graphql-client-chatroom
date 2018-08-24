@@ -43,7 +43,7 @@ export default () => (
       <Route path='/' exact component={HomeScreen} />
       <Route path='/login' exact component={LoginScreen} />
       <Route path='/register' exact component={RegisterScreen} />
-      <Route path='/viewTeam/:teamId?/:channelId?' exact component={ViewTeamScreen} />
+      <PrivateRoute path='/viewTeam/:teamId?/:channelId?' exact component={ViewTeamScreen} />
       <PrivateRoute path='/createTeam' exact component={CreateTeamScreen} />
     </Switch>
   </BrowserRouter>
