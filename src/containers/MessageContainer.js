@@ -5,13 +5,45 @@ import gql from 'graphql-tag'
 import Messages from '../components/viewTeam/Messages'
 import Message from '../components/viewTeam/Message'
 
+const newChannelMessageSubscription = gql`
+  subscription($channelId: Int!) {
+    newChannelMessage(channelId: $channelId) {
+      id
+      text
+      user {
+        username
+      }
+      created_at
+    }
+  }
+`
+
 class MessageContainer extends Component {
+  componentDidMount () {
+    this.props.data.subscribeToMore({
+      document: newChannelMessageSubscription,
+      variables: {
+        channelId: this.props.channelId
+      },
+      updateQuery: (prev, { subscriptionData }) => {
+        if (!subscriptionData) {
+          return prev
+        }
+
+        return {
+          ...prev,
+          messages: [...prev.messages, subscriptionData.data.newChannelMessage]
+        }
+      }
+    })
+  }
+
   render () {
     const { data: { loading, messages }} = this.props
     if (loading) {
       return null
     }
-    console.log(this.props)
+
     return (
       <div>
         <Messages>
