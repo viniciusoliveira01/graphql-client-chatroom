@@ -7,6 +7,7 @@ import Channels from '../components/viewTeam/Channels'
 import Teams from '../components/viewTeam/Teams'
 import AddChannelModal from '../components/viewTeam/AddChannelModal'
 import InvitePeopleModal from '../components/viewTeam/InvitePeopleModal'
+import DirectMessageModal from '../components/viewTeam/DirectMessageModal'
 
 import {allTeamsQuery} from '../graphql/Team'
 
@@ -15,7 +16,8 @@ class Sidebar extends Component {
     super(props)
     this.state = {
       openAddChannelModal: '',
-      openInvitePeopleModal: ''
+      openInvitePeopleModal: '',
+      openDirectMessageModal: ''
     }
   }
 
@@ -35,19 +37,17 @@ class Sidebar extends Component {
     this.setState({ openInvitePeopleModal: false });
   };
 
-  render () {
-    const { teams, team } = this.props
-    const { openAddChannelModal, openInvitePeopleModal } = this.state
+  handleOpenDirectMessageModal = () => {
+    this.setState({ openDirectMessageModal: true });
+  };
 
-    let username = ''
-    let isOwner = false
-    try {
-      const token = localStorage.getItem('token')
-      const { user } = decode(token)
-      // eslint-disable-next-line prefer-destructuring
-      username = user.username
-      isOwner = user.id === team.owner
-    } catch (err) {}
+  handleCloseDirectMessageModal = () => {
+    this.setState({ openDirectMessageModal: false });
+  };
+
+  render () {
+    const { teams, team, username } = this.props
+    const { openAddChannelModal, openInvitePeopleModal, openDirectMessageModal } = this.state
 
     return <React.Fragment>
              <Teams key='team-sidebar' teams={teams} />
@@ -57,15 +57,19 @@ class Sidebar extends Component {
                username={username}
                teamId={team.id}
                channels={team.channels}
-               isOwner={isOwner}
-               users={[{ id: 1, name: 'slackbot' }, { id: 2, name: 'user1' }]}
+               isOwner={team.admin}
+               users={team.directMessageMembers}
                onChannelAddClick={this.handleOpenChannelModal}
-               onInvitePeopleClick={this.handleOpenInvitePeopleModal} />
+               onInvitePeopleClick={this.handleOpenInvitePeopleModal}
+               onDirectMessage={this.handleOpenDirectMessageModal} />
              <Modal open={openAddChannelModal} onClose={this.handleCloseChannelModal} center>             
                <AddChannelModal teamId={team.id} onClose={this.handleCloseChannelModal}/>
              </Modal>
              <Modal open={openInvitePeopleModal} onClose={this.handleCloseInvitePeopleModal} center>             
                <InvitePeopleModal teamId={team.id} onClose={this.handleCloseInvitePeopleModal}/>
+             </Modal>
+             <Modal open={openDirectMessageModal} onClose={this.handleCloseDirectMessageModal} center>             
+               <DirectMessageModal teamId={team.id} onClose={this.handleCloseDirectMessageModal}/>
              </Modal>
            </React.Fragment>
   }

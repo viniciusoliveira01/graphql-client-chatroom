@@ -4,7 +4,7 @@ import gql from 'graphql-tag'
 import { compose, graphql } from 'react-apollo'
 import findIndex from 'lodash/findIndex'
 
-import {allTeamsQuery} from '../../graphql/Team'
+import {meQuery} from '../../graphql/Team'
 
 const AddChannelModal = ({
   values,
@@ -51,11 +51,11 @@ export default compose(
             return
           }
 
-          const data = store.readQuery({query: allTeamsQuery})
+          const data = store.readQuery({query: meQuery})
 
-          const teamIdx = findIndex(data.allTeams, ['id', teamId])
-          data.allTeams[teamIdx].channels.push(channel)
-          store.writeQuery({ query: allTeamsQuery, data })
+          const teamIdx = findIndex(data.me.teams, ['id', teamId])
+          data.me.teams[teamIdx].channels.push(channel)
+          store.writeQuery({ query: meQuery, data })
         },
         optimisticResponse: {
           createChannel: {

@@ -19,27 +19,47 @@ const newChannelMessageSubscription = gql`
 `
 
 class MessageContainer extends Component {
-  componentDidMount () {
+  componentWillMount() {
+    this.unsubscribe = this.subscribe(this.props.channelId);
+  }
+
+  componentWillReceiveProps({ channelId }) {
+    if (this.props.channelId !== channelId) {
+      if (this.unsubscribe) {
+        this.unsubscribe();
+      }
+      this.unsubscribe = this.subscribe(channelId);
+    }
+  }
+
+  componentWillUnmount() {
+    if (this.unsubscribe) {
+      this.unsubscribe();
+    }
+  }
+
+  subscribe = channelId => {
     this.props.data.subscribeToMore({
       document: newChannelMessageSubscription,
       variables: {
-        channelId: this.props.channelId
+        channelId,
       },
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData) {
-          return prev
+          return prev;
         }
 
         return {
           ...prev,
-          messages: [...prev.messages, subscriptionData.data.newChannelMessage]
-        }
-      }
-    })
+          messages: [...prev.messages, subscriptionData.data.newChannelMessage],
+        };
+      },
+    });
   }
 
+
   render () {
-    const { data: { loading, messages }} = this.props
+    const { data: { loading, messages }, channelId} = this.props
     if (loading) {
       return null
     }
@@ -48,7 +68,7 @@ class MessageContainer extends Component {
       <div>
         <Messages>
           <ul className='message-list'>
-            {messages.map(message => <Message message={message} key={message.id} />)}
+            {messages.map(message => <Message username={message.user.username} message={message} key={`${channelId}-${message.id}`} />)}
           </ul>
         </Messages>
       </div>
@@ -69,11 +89,11 @@ const messagesQuery = gql`
   }
 `
 
-export default graphql(
-  messagesQuery,
-  {
-    variables: props => ({
+export default graphql(messagesQuery, {
+  options: props => ({
+    variables: {
       channelId: props.channelId
-    })
-  }
-)(MessageContainer)
+    },
+    fetchPolicy: 'network-only'
+  })
+})(MessageContainer)

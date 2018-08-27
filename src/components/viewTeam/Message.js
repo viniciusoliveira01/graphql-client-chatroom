@@ -1,9 +1,9 @@
 import React from 'react'
 
-export default ({message}) => (
+export default ({message, username}) => (
   <li>
     <p>
-      {message.user.username}
+      {username}
     </p>
     <p>
       {message.created_at}

@@ -2,27 +2,24 @@ import React from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 
-const Bubble = ({ on = true }) => (on ? <Green>
-                                          ●
-                                        </Green> : '○')
-
 const channel = ({ id, name }, teamId) => (
-  <Link key={`channel-${id}`} to={`/viewTeam/${teamId}/${id}`}>
-  <SideBarListItem>
-    #
-    {name}
-  </SideBarListItem>
+  <Link key={`channel-${id}`} to={`/viewTeam/${teamId}/${id}`} style={{color: '#958993'}}>
+    <SideBarListItem>
+      #
+      {name}
+    </SideBarListItem>
   </Link>
 )
 
-const user = ({ id, name }) => (
+const user = ({ id, username }, teamId) => (
   <SideBarListItem key={`user-${id}`}>
-    <Bubble />
-    {name}
+    <Link to={`/viewTeam/user/${teamId}/${id}`}>
+      {username}
+    </Link>
   </SideBarListItem>
 )
 
-export default ({teamName, username, channels, users, onChannelAddClick, teamId, onInvitePeopleClick, isOwner}) => (
+export default ({teamName, username, channels, users, onChannelAddClick, teamId, onInvitePeopleClick, onDirectMessage, isOwner}) => (
   <ChannelWrapper>
     <PushLeft>
       <TeamNameHeader>
@@ -43,8 +40,9 @@ export default ({teamName, username, channels, users, onChannelAddClick, teamId,
       <SideBarList>
         <SideBarListHeader>
           Direct Messages
+          <span onClick={onDirectMessage}>+++</span>
         </SideBarListHeader>
-        {users.map(user)}
+        {users.map((u) => user(u, teamId))}
       </SideBarList>
     </div>
     {isOwner && <div>

@@ -23,7 +23,7 @@ class LoginScreen extends Component {
     if (ok) {
       localStorage.setItem('token', token)
       localStorage.setItem('refreshToken', token)
-      this.props.history.push('/createTeam')
+      this.props.history.push('/viewTeam')
     } else {
       const err = {}
       errors.forEach(({ path, message }) => {

@@ -4,10 +4,10 @@ import { withFormik } from 'formik'
 import gql from 'graphql-tag'
 import { compose, graphql } from 'react-apollo'
 
-const AddChannelModal = ({channelName, values, handleChange, handleBlur, handleSubmit, isSubmitting}) => (
+const AddChannelModal = ({channelName, values, handleChange, handleBlur, handleSubmit, isSubmitting, placeholder}) => (
   <SendMessageWrapper>
     <Input
-      placeholder={`Message #${channelName}`}
+      placeholder={`Message to #${placeholder}`}
       name='message'
       value={values.message}
       onChange={handleChange}
@@ -30,25 +30,14 @@ const Input = styled.input`
   border-radius: 4px
 `
 
-const createMessageMutation = gql`
-  mutation($channelId: Int!, $text: String!) {
-    createMessage(channelId: $channelId, text: $text)
-  }
-`
-
-export default compose(
-  graphql(createMessageMutation),
-  withFormik({
-    mapPropsToValues: () => ({ message: '' }),
-    handleSubmit: async (values, { props: { channelId, mutate }, setSubmitting, resetForm }) => {
-      if (!values.message || !values.message.trim()) {
-        setSubmitting(false)
-        return
-      }
-
-      await mutate({
-        variables: { channelId, text: values.message }
-      })
-      resetForm(false)
+export default withFormik({
+  mapPropsToValues: () => ({ message: '' }),
+  handleSubmit: async (values, { props: { onSubmit, mutate }, setSubmitting, resetForm }) => {
+    if (!values.message || !values.message.trim()) {
+      setSubmitting(false)
+      return
     }
-  }))(AddChannelModal)
+    await onSubmit(values.message)
+    resetForm(false)
+  }
+})(AddChannelModal)
