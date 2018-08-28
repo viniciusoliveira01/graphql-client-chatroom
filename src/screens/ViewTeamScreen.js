@@ -18,8 +18,8 @@ const ViewTeamScreen = ({ mutate, data: { loading, me }, match: { params: { team
   }
 
   const { teams, username } = me
-
-  if (!teams) {
+  console.log(teams)
+  if (teams.length === 0) {
     return <Redirect to='/createTeam' />
   }
 
@@ -32,17 +32,14 @@ const ViewTeamScreen = ({ mutate, data: { loading, me }, match: { params: { team
     letter: t.name.charAt(0).toUpperCase()
   }))
 
-  let channel
-  if (teams.channels) {
-    const channelIdInteger = parseInt(channelId, 10)
-    const channelIdx = channelIdInteger ? findIndex(team.channels, ['id', channelIdInteger]) : 0
-    channel = channelIdx === -1 ? team.channels[0] : team.channels[channelIdx]
-  }
-
+  const channelIdInteger = parseInt(channelId, 10)
+  const channelIdx = channelIdInteger ? findIndex(team.channels, ['id', channelIdInteger]) : 0
+  const channel = channelIdx === -1 ? team.channels[0] : team.channels[channelIdx]
+  
   return (
     <AppLayout>
-      <Sidebar teams={teamsList} team={team} username={username} />
-      {(team && team.channels && channel) && <React.Fragment>
+      {team && <Sidebar teams={teamsList} team={team} username={username} />}
+      {team && <React.Fragment>
                     <Header channelName={channel.name} />
                     <MessageContainer channelId={channel.id} />
                     <SendMessage placeholder={channel.name} onSubmit={async (text) => {
