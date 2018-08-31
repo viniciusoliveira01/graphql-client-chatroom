@@ -45,54 +45,79 @@ class RegisterScreen extends Component {
     const { username, email, password, usernameError, emailError, passwordError, loading } = this.state
     return (
       <RegisterContainer>
-        <RegisterTitle>Chat Room</RegisterTitle>
-        <RegisterSubtitle>
-          Join your friends in a talk!
-        </RegisterSubtitle>
-        <RegisterForm>
-          <Input
-            placeholder='Name'
-            type='text'
-            value={username}
-            onChange={e => this.setState({username: e.target.value})} />
-          {usernameError && <span>{usernameError}</span>}
-          <Input
-            name='email'
-            placeholder='Email'
-            type='email'
-            value={email}
-            onChange={e => this.setState({email: e.target.value})} />
-          {emailError && <span>{emailError}</span>}
-          <Input
-            name='password'
-            type='password'
-            placeholder='Password'
-            value={password}
-            onChange={e => this.setState({password: e.target.value})} />
-          {passwordError && <span>{passwordError}</span>}
-          <LaddaButton
-              loading={loading}
-              data-color="purple"
-              data-size={S}
-              data-style={ZOOM_IN}
-              data-spinner-size={30}
-              data-spinner-color="white"
-              data-spinner-lines={12} 
-              onClick={this.onSubmit}>
-              Register
-          </LaddaButton>
-        </RegisterForm>
+        <LeftSide />
+        <RightSide>
+          <RegisterTitle>Chat Room</RegisterTitle>
+          <RegisterSubtitle>
+            Join your friends in a talk!
+          </RegisterSubtitle>
+          <RegisterForm>
+            <Input
+              placeholder='Name'
+              type='text'
+              value={username}
+              onChange={e => this.setState({username: e.target.value})} />
+            {usernameError && <span>{usernameError}</span>}
+            <Input
+              name='email'
+              placeholder='Email'
+              type='email'
+              value={email}
+              onChange={e => this.setState({email: e.target.value})} />
+            {emailError && <span>{emailError}</span>}
+            <Input
+              name='password'
+              type='password'
+              placeholder='Password'
+              value={password}
+              onChange={e => this.setState({password: e.target.value})} />
+            {passwordError && <span>{passwordError}</span>}
+            <LaddaButton
+                loading={loading}
+                data-color="purple"
+                data-size={S}
+                data-style={ZOOM_IN}
+                data-spinner-size={30}
+                data-spinner-color="white"
+                data-spinner-lines={12} 
+                onClick={this.onSubmit}>
+                Register
+            </LaddaButton>
+          </RegisterForm>
+        </RightSide>
       </RegisterContainer>
     )
   }
 }
 
-const RegisterContainer = styled.div`
-  height: 100vh
+const LeftSide = styled.div`
   display: flex
+  flex: 1
+  position: relative;
+  background: linear-gradient(152deg, #c173c2, #7375c2);
+  &::before {
+    content: "";
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    background: inherit;
+    z-index: -1;
+    bottom: 0;
+    transform-origin: left top;
+    transform: skewX(6deg);
+  }
+`
+const RightSide = styled.div`
+  display: flex
+  flex: 2
+  flex-direction: column
   justify-content: center
   align-items: center
-  flex-direction: column
+`
+
+const RegisterContainer = styled.div`
+  display: flex
+  height: 100vh
 `
 
 const RegisterTitle = styled.h1`

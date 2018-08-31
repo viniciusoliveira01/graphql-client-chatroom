@@ -18,7 +18,7 @@ const ViewTeamScreen = ({ mutate, data: { loading, me }, match: { params: { team
   }
 
   const { teams, username } = me
-  console.log(teams)
+
   if (teams.length === 0) {
     return <Redirect to='/createTeam' />
   }
@@ -40,7 +40,6 @@ const ViewTeamScreen = ({ mutate, data: { loading, me }, match: { params: { team
     <AppLayout>
       {team && <Sidebar teams={teamsList} team={team} username={username} />}
       {team && <React.Fragment>
-                    <Header channelName={channel.name} />
                     <MessageContainer channelId={channel.id} />
                     <SendMessage placeholder={channel.name} onSubmit={async (text) => {
                       await mutate({ variables: {text, channelId: channel.id} })

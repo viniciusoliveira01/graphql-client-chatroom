@@ -2,23 +2,39 @@ import React from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 
+const team = ({ id, letter }) => (
+  <TeamListItem key={`team-${id}`} to={`/viewTeam/${id}`}>
+    {letter}
+  </TeamListItem>
+)
+
+export default ({ teams }) => (
+  <TeamWrapper>
+    <TeamList>
+      {teams.map(team)}
+    </TeamList>
+    <TeamListItem to={`/createTeam`}>
+      +
+    </TeamListItem>
+  </TeamWrapper>
+)
+
 const TeamWrapper = styled.div`
   grid-column: 1
   grid-row: 1 / 4
-  background-color: #362234
+  background-color: #181818
   color: #958993
 `
 
-const TeamList = styled.ul`
+const TeamList = styled.div`
   width: 100%
-  padding-left: 0px
-  list-style: none
+  padding-top: 5px
 `
 
-const TeamListItem = styled.li`
+const TeamListItem = styled(Link)`
   height: 50px
   width: 50px
-  background-color: #676066
+  background-color: #9973c2
   color: #fff
   margin: auto
   margin-bottom: 10px
@@ -26,29 +42,11 @@ const TeamListItem = styled.li`
   align-items: center
   justify-content: center
   font-size: 24px
-  border-radius: 11px
+  border-radius: 50%
+  text-decoration: none
   &:hover {
     border-style: solid
     border-width: thick
-    border-color: #767676
+    border-color: #9973c2
   }
 `
-const team = ({ id, letter }) => (
-  <Link key={`team-${id}`} to={`/viewTeam/${id}`}>
-    <TeamListItem>
-      {letter}
-    </TeamListItem>
-  </Link>
-)
-export default ({ teams }) => (
-  <TeamWrapper>
-    <TeamList>
-      {teams.map(team)}
-    </TeamList>
-    <Link to={`/createTeam`}>
-      <TeamListItem>
-        +
-      </TeamListItem>
-    </Link>
-  </TeamWrapper>
-)

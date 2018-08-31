@@ -2,7 +2,7 @@ import React, { Component } from 'react'
 import { graphql } from 'react-apollo'
 import gql from 'graphql-tag'
 import styled from 'styled-components'
-import LaddaButton, { S, ZOOM_IN } from 'react-ladda';
+import LaddaButton, { S, ZOOM_IN } from 'react-ladda'
 import { Link } from 'react-router-dom'
 
 class LoginScreen extends Component {
@@ -45,52 +45,78 @@ class LoginScreen extends Component {
 
     return (
       <SigninContainer>
-          <SigninTitle>Chat Room</SigninTitle>
-          <SigninSubtitle>
-            See what your friends are talking about!
-          </SigninSubtitle>
-          <SigninForm>
-            <Input
-              name='email'
-              placeholder='Email'
-              type='email'
-              value={email}
-              onChange={e => this.setState({email: e.target.value})} />
-            {emailError && <span>{emailError}</span>}
-            <Input
-              name='password'
-              type='password'
-              placeholder='Password'
-              value={password}
-              onChange={e => this.setState({password: e.target.value})} />
-            {passwordError && <span>{passwordError}</span>}
-            <LaddaButton
-              loading={loading}
-              data-color="purple"
-              data-size={S}
-              data-style={ZOOM_IN}
-              data-spinner-size={30}
-              data-spinner-color="white"
-              data-spinner-lines={12} 
-              onClick={this.onSubmit}>
-              Submit
-            </LaddaButton>
-            <CreateAccountSpan>
-              New to Chat?
-              <CreateAccountText to='/register'> Create an account</CreateAccountText>
-            </CreateAccountSpan>
-          </SigninForm>
+          <LeftSide />
+          <RightSide>
+            <SigninTitle>Chat Room</SigninTitle>
+            <SigninSubtitle>
+              See what your friends are talking about!
+            </SigninSubtitle>
+            <SigninForm>
+              <Input
+                name='email'
+                placeholder='Email'
+                type='email'
+                value={email}
+                onChange={e => this.setState({email: e.target.value})} />
+              {emailError && <span>{emailError}</span>}
+              <Input
+                name='password'
+                type='password'
+                placeholder='Password'
+                value={password}
+                onChange={e => this.setState({password: e.target.value})} />
+              {passwordError && <span>{passwordError}</span>}
+              <LaddaButton
+                loading={loading}
+                data-color="purple"
+                data-size={S}
+                data-style={ZOOM_IN}
+                data-spinner-size={30}
+                data-spinner-color="white"
+                data-spinner-lines={12} 
+                onClick={this.onSubmit}>
+                Submit
+              </LaddaButton>
+              <CreateAccountSpan>
+                New to Chat?
+                <CreateAccountText to='/register'> Create an account</CreateAccountText>
+              </CreateAccountSpan>
+            </SigninForm>
+          </RightSide>
+
       </SigninContainer>
     )
   }
 }
 
-const SigninContainer = styled.div`
-  height: 100vh
+const LeftSide = styled.div`
   display: flex
+  flex: 1
+  position: relative
+  background: linear-gradient(152deg, #7375c2, #c173c2);
+  &::before {
+    content: "";
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    background: inherit;
+    z-index: -1;
+    bottom: 0;
+    transform-origin: left top;
+    transform: skewX(6deg);
+  }
+`
+const RightSide = styled.div`
+  display: flex
+  flex: 2
+  flex-direction: column
   justify-content: center
   align-items: center
-  flex-direction: column
+`
+
+const SigninContainer = styled.div`
+  display: flex
+  height: 100vh
 `
 
 const SigninTitle = styled.h1`

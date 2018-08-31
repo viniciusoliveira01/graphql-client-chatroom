@@ -35,7 +35,6 @@ const DirectMessageScreen = ({ mutate, data: { loading, me, getUser }, match: { 
   return (
     <AppLayout>
       <Sidebar teams={teamsList} team={team} username={username} />
-      <Header channelName={getUser.username} />
       <DirectMessageContainer teamId={teamId} userId={userId} />
       <SendMessage onSubmit={async (text) => {
         await mutate({ variables: {

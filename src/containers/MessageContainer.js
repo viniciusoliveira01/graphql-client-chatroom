@@ -108,11 +108,11 @@ class MessageContainer extends Component {
 
     return (
       <Messages onScroll={this.handleScroll} refs={scroller => {this.scroller = scroller}}>
-        <ul className='message-list'>
+        <div>
           {
             messages.slice().reverse().map(message => <Message username={message.user.username} message={message} key={`${channelId}-${message.id}`} />)
           }
-        </ul>
+        </div>
       </Messages>
     )
   }

@@ -48,43 +48,68 @@ class CreateTeamScreen extends Component {
     const { name, nameError, loading } = this.state
     return (
       <CreateTeamContainer>
-          <CreateTeamTitle>Create your Team</CreateTeamTitle>
-          <CreateTeamSubtitle>
-            Here you can create a team to interact with your friends and team mates
-          </CreateTeamSubtitle>
-          <CreateTeamForm>
-            <Input
-              name='team'
-              placeholder='Team name'
-              type='text'
-              value={name}
-              onChange={e => this.setState({name: e.target.value})} />
-                {
-                  nameError && <span>{nameError}</span>
-                }
-            <LaddaButton
-                loading={loading}
-                data-color="purple"
-                data-size={S}
-                data-style={ZOOM_IN}
-                data-spinner-size={30}
-                data-spinner-color="white"
-                data-spinner-lines={12} 
-                onClick={this.onSubmit}>
-                Register
-            </LaddaButton>
-          </CreateTeamForm>
+          <LeftSide />
+          <RightSide>
+            <CreateTeamTitle>Create your Team</CreateTeamTitle>
+            <CreateTeamSubtitle>
+              Here you can create a team to interact with your friends and team mates
+            </CreateTeamSubtitle>
+            <CreateTeamForm>
+              <Input
+                name='team'
+                placeholder='Team name'
+                type='text'
+                value={name}
+                onChange={e => this.setState({name: e.target.value})} />
+                  {
+                    nameError && <span>{nameError}</span>
+                  }
+              <LaddaButton
+                  loading={loading}
+                  data-color="purple"
+                  data-size={S}
+                  data-style={ZOOM_IN}
+                  data-spinner-size={30}
+                  data-spinner-color="white"
+                  data-spinner-lines={12} 
+                  onClick={this.onSubmit}>
+                  Register
+              </LaddaButton>
+            </CreateTeamForm>
+          </RightSide>
       </CreateTeamContainer>
     )
   }
 }
 
-const CreateTeamContainer = styled.div`
-  height: 100vh
+const LeftSide = styled.div`
   display: flex
+  flex: 1
+  position: relative
+  background: linear-gradient(152deg, #c173c2, #9973c2);
+  &::before {
+    content: "";
+    width: 100%;
+    height: 100vh;
+    position: absolute;
+    background: inherit;
+    z-index: -1;
+    bottom: 0;
+    transform-origin: left top;
+    transform: skewX(6deg);
+  }
+`
+const RightSide = styled.div`
+  display: flex
+  flex: 2
+  flex-direction: column
   justify-content: center
   align-items: center
-  flex-direction: column
+`
+
+const CreateTeamContainer = styled.div`
+  display: flex
+  height: 100vh
 `
 
 const CreateTeamTitle = styled.h1`

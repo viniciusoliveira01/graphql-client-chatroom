@@ -64,7 +64,6 @@ class DirectMessageContainer extends Component {
     if (loading) {
       return null
     }
-    console.log(directMessages)
 
     return (
       <div>
