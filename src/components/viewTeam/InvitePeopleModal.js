@@ -33,7 +33,7 @@ const InvitePeopleModal = ({
       data-spinner-size={30}
       data-spinner-color="white"
       data-spinner-lines={12} 
-      onClick={this.handleSubmit}>
+      onClick={handleSubmit}>
         Invite friends
     </LaddaButton>
   </InvitePeopleModalContainer>

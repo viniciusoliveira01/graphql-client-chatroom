@@ -34,7 +34,7 @@ const TeamList = styled.div`
 const TeamListItem = styled(Link)`
   height: 50px
   width: 50px
-  background-color: #9973c2
+  background-color: #c173c2
   color: #fff
   margin: auto
   margin-bottom: 10px
@@ -47,6 +47,6 @@ const TeamListItem = styled(Link)`
   &:hover {
     border-style: solid
     border-width: thick
-    border-color: #9973c2
+    border-color: #c173c2
   }
 `
