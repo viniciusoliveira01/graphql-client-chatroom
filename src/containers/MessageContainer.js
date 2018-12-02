@@ -101,7 +101,8 @@ class MessageContainer extends Component {
   }
 
   render () {
-    const { data: { loading, messages, fetchMore }, channelId} = this.props
+    const { data: { loading, messages, fetchMore, me }, channelId} = this.props
+
     if (loading) {
       return null
     }
@@ -110,7 +111,12 @@ class MessageContainer extends Component {
       <Messages onScroll={this.handleScroll} refs={scroller => {this.scroller = scroller}}>
         <div>
           {
-            messages.slice().reverse().map(message => <Message username={message.user.username} message={message} key={`${channelId}-${message.id}`} />)
+            messages.slice().reverse().map(message => <Message
+              meUserId={me ? me.id : null}
+              messageUserId={message.user.id}
+              username={message.user.username}
+              message={message}
+              key={`${channelId}-${message.id}`} />)
           }
         </div>
       </Messages>
@@ -137,9 +143,13 @@ const messagesQuery = gql`
       id
       text
       user {
+        id
         username
       }
       created_at
+    }
+    me {
+      id
     }
   }
 `

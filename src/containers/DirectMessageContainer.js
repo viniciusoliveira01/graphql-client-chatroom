@@ -1,9 +1,9 @@
-import React, { Component } from 'react'
-import { graphql } from 'react-apollo'
-import gql from 'graphql-tag'
+import React, { Component } from "react";
+import { graphql } from "react-apollo";
+import gql from "graphql-tag";
 
-import Messages from '../components/viewTeam/Messages'
-import Message from '../components/viewTeam/Message'
+import Messages from "../components/viewTeam/Messages";
+import Message from "../components/viewTeam/Message";
 
 const newDirectMessageSubscription = gql`
   subscription($teamId: Int!, $userId: Int!) {
@@ -16,34 +16,34 @@ const newDirectMessageSubscription = gql`
       created_at
     }
   }
-`
+`;
 
 class DirectMessageContainer extends Component {
-  componentWillMount () {
-    this.unsubscribe = this.subscribe(this.props.teamId, this.props.userId)
+  componentWillMount() {
+    this.unsubscribe = this.subscribe(this.props.teamId, this.props.userId);
   }
 
-  componentWillReceiveProps ({ teamId, userId }) {
+  componentWillReceiveProps({ teamId, userId }) {
     if (this.props.teamId !== teamId || this.props.userId !== userId) {
       if (this.unsubscribe) {
-        this.unsubscribe()
+        this.unsubscribe();
       }
-      this.unsubscribe = this.subscribe(teamId, userId)
+      this.unsubscribe = this.subscribe(teamId, userId);
     }
   }
 
-  componentWillUnmount () {
+  componentWillUnmount() {
     if (this.unsubscribe) {
-      this.unsubscribe()
+      this.unsubscribe();
     }
   }
 
   subscribe = (teamId, userId) => {
-        this.props.data.subscribeToMore({
+    this.props.data.subscribeToMore({
       document: newDirectMessageSubscription,
       variables: {
         teamId,
-        userId,
+        userId
       },
       updateQuery: (prev, { subscriptionData }) => {
         if (!subscriptionData) {
@@ -52,28 +52,40 @@ class DirectMessageContainer extends Component {
 
         return {
           ...prev,
-          directMessages: [...prev.directMessages, subscriptionData.data.newDirectMessage],
+          directMessages: [
+            ...prev.directMessages,
+            subscriptionData.data.newDirectMessage
+          ]
         };
-      },
-    })
-  }
+      }
+    });
+  };
 
+  render() {
+    const {
+      data: { loading, directMessages, me },
+      userId
+    } = this.props;
 
-  render () {
-    const { data: { loading, directMessages }, userId} = this.props
     if (loading) {
-      return null
+      return null;
     }
 
     return (
       <div>
         <Messages>
-          <ul className='message-list'>
-            {directMessages.map(message => <Message username={message.sender.username} message={message} key={`${userId}-${message.id}`} />)}
-          </ul>
+          {directMessages.map(message => (
+            <Message
+              meUserId={me ? me.id : null}
+              messageUserId={message.sender.id}
+              username={message.sender.username}
+              message={message}
+              key={`${userId}-${message.id}`}
+            />
+          ))}
         </Messages>
       </div>
-    )
+    );
   }
 }
 
@@ -82,13 +94,17 @@ const directMessagesQuery = gql`
     directMessages(teamId: $teamId, otherUserId: $userId) {
       id
       sender {
+        id
         username
       }
       text
       created_at
     }
+    me {
+      id
+    }
   }
-`
+`;
 
 export default graphql(directMessagesQuery, {
   options: props => ({
@@ -96,6 +112,6 @@ export default graphql(directMessagesQuery, {
       teamId: props.teamId,
       userId: props.userId
     },
-    fetchPolicy: 'network-only'
+    fetchPolicy: "network-only"
   })
-})(DirectMessageContainer)
+})(DirectMessageContainer);

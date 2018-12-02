@@ -3,17 +3,15 @@ import styled from "styled-components";
 import moment from "moment";
 
 export default ({ message, username, meUserId, messageUserId }) => {
+  console.log(meUserId, messageUserId);
   return (
-    <Message>
-      <UserIcon isFriend={meUserId === messageUserId}>
-        <UserIconName>{username.charAt(0).toUpperCase()}</UserIconName>
+    <Message isFriend={meUserId === "vinicius"}>
+      <UserIcon isFriend={meUserId === "vinicius"}>
+        <UserIconName>{meUserId === "vinicius" ? "V" : "B"}</UserIconName>
       </UserIcon>
       <Container>
         <UserMessageInfos>
           <Username>{username}</Username>
-          <MessageCreatedAt>
-            {moment(message.created_at).format("HH:mm a")}
-          </MessageCreatedAt>
         </UserMessageInfos>
         <MessageText>{message.text}</MessageText>
       </Container>
